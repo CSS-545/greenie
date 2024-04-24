@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
@@ -28,7 +28,7 @@ const Home = () => {
             sharing of verification reports on our secure encrypted platform.
           </Text>
 
-          <TouchableOpacity onPress={() => navigation.replace("Dashboard")}>
+          <TouchableOpacity>
             <View style={styles.heroActionBtn}>
               <View style={styles.googleButton}>
                 <Image
