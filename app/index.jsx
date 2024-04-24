@@ -2,6 +2,7 @@ import React from "react";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
+import { router } from "expo-router";
 
 const Home = () => {
   return (
@@ -28,7 +29,7 @@ const Home = () => {
             sharing of verification reports on our secure encrypted platform.
           </Text>
 
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => router.replace("/dashboard")}>
             <View style={styles.heroActionBtn}>
               <View style={styles.googleButton}>
                 <Image

@@ -9,7 +9,7 @@ const TabIcon = ({ icon, color, name, focused }) => {
   return (
     <View style={styles.container}>
       <Image
-        source={icon}
+        source={{ uri: icon }}
         resizeMode="contain"
         tintColor={color}
         style={styles.icon}
@@ -30,25 +30,23 @@ const TabLayout = () => {
       <StatusBar backgroundColor="#8cf078" style="dark" />
       <Tabs
         screenOptions={{
-          tabBarActiveTintColor: "#FFA001",
+          tabBarActiveTintColor: "#8cf078",
           tabBarInactiveTintColor: "#CDCDE0",
           tabBarShowLabel: false,
           tabBarStyle: {
-            backgroundColor: "#161622",
-            borderTopWidth: 1,
-            borderTopColor: "#232533",
-            height: 84,
+            backgroundColor: "#a5fbc9",
+            height: 60,
           },
         }}
       >
         <Tabs.Screen
-          name="home"
+          name="dashboard"
           options={{
-            title: "Home",
+            title: "Dashboard",
             headerShown: false,
             tabBarIcon: ({ color, focused }) => (
               <TabIcon
-                icon={icons.home}
+                icon={icons?.home}
                 color={color}
                 name="Home"
                 focused={focused}
@@ -57,31 +55,30 @@ const TabLayout = () => {
           }}
         />
         <Tabs.Screen
-          name="bookmark"
+          name="location"
           options={{
-            title: "Bookmark",
+            title: "Location",
             headerShown: false,
             tabBarIcon: ({ color, focused }) => (
               <TabIcon
-                icon={icons.bookmark}
+                icon={icons?.logout}
                 color={color}
-                name="Bookmark"
+                name="Location"
                 focused={focused}
               />
             ),
           }}
         />
-
         <Tabs.Screen
-          name="create"
+          name="work"
           options={{
-            title: "Create",
+            title: "Work",
             headerShown: false,
             tabBarIcon: ({ color, focused }) => (
               <TabIcon
-                icon={icons.plus}
+                icon={icons?.logout}
                 color={color}
-                name="Create"
+                name="Work"
                 focused={focused}
               />
             ),
@@ -94,7 +91,7 @@ const TabLayout = () => {
             headerShown: false,
             tabBarIcon: ({ color, focused }) => (
               <TabIcon
-                icon={icons.profile}
+                icon={icons?.profile}
                 color={color}
                 name="Profile"
                 focused={focused}
@@ -124,7 +121,5 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: "#CDCDE0",
   },
-  boldText: {
-    fontFamily: "Poppins-SemiBold",
-  },
+  boldText: {},
 });

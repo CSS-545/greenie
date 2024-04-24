@@ -1,16 +1,18 @@
 import "react-native-url-polyfill/auto";
-import { StyleSheet } from "react-native";
 import { SplashScreen, Stack } from "expo-router";
+import GlobalProvider from "../context/GlobalProvider";
 
 SplashScreen.preventAutoHideAsync();
 
 const RootLayout = () => {
   return (
     <>
-      <Stack>
-        <Stack.Screen name="index" options={{ headerShown: false }} />
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      </Stack>
+      <GlobalProvider>
+        <Stack>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="index" options={{ headerShown: false }} />
+        </Stack>
+      </GlobalProvider>
     </>
   );
 };

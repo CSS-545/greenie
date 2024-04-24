@@ -1,9 +1,9 @@
 import React from "react";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { StyleSheet, View, Image, TouchableOpacity } from "react-native";
+import { Text, StyleSheet, View, Image, TouchableOpacity } from "react-native";
 
-const Dashboard = () => {
+export default Dashboard = () => {
   return (
     <SafeAreaView>
       <StatusBar backgroundColor="#8cf078" style="dark" />
@@ -20,12 +20,7 @@ const Dashboard = () => {
       </View>
 
       <View style={styles.bioSection}>
-        <View style={styles.bioNameBox}>
-          <Text style={styles.bioName}>Swanand Wagh</Text>
-        </View>
-        <TouchableOpacity style={styles.icon}>
-          <MdOutlineEdit size={22} style={styles.btn} />
-        </TouchableOpacity>
+        <Text style={styles.bioName}>Swanand Wagh</Text>
       </View>
 
       <View style={styles.chips}>
@@ -49,16 +44,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+    justifyContent: "center",
     paddingHorizontal: 20,
     paddingVertical: 10,
-  },
-  bioNameBox: {
-    flex: 1,
-    alignItems: "center",
-    flexDirection: "row",
-    justifyContent: "center",
-    gap: 10,
-    marginLeft: 16,
   },
   bioName: {
     fontSize: 18,
