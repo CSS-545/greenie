@@ -5,19 +5,8 @@ import { Image, Text, View, StyleSheet } from "react-native";
 import { icons } from "../../constants/icons";
 import { Loader } from "../../components/Loader";
 
-const TabIcon = ({ icon, color, name, focused }) => {
-  return (
-    <View style={styles.container}>
-      <Image
-        source={{ uri: icon }}
-        resizeMode="contain"
-        tintColor={color}
-        style={styles.icon}
-      />
-      <Text style={[styles.text, focused && styles.boldText]}>{name}</Text>
-    </View>
-  );
-};
+import { Entypo } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const TabLayout = () => {
   //   const { loading, isLogged } = useGlobalContext();
@@ -31,10 +20,10 @@ const TabLayout = () => {
       <Tabs
         screenOptions={{
           tabBarActiveTintColor: "#8cf078",
-          tabBarInactiveTintColor: "#CDCDE0",
+          tabBarInactiveTintColor: "#fff",
           tabBarShowLabel: false,
           tabBarStyle: {
-            backgroundColor: "#a5fbc9",
+            backgroundColor: "#000",
             height: 60,
           },
         }}
@@ -44,13 +33,8 @@ const TabLayout = () => {
           options={{
             title: "Dashboard",
             headerShown: false,
-            tabBarIcon: ({ color, focused }) => (
-              <TabIcon
-                icon={icons?.home}
-                color={color}
-                name="Home"
-                focused={focused}
-              />
+            tabBarIcon: ({ color }) => (
+              <Entypo name="home" size={24} color={color} />
             ),
           }}
         />
@@ -59,13 +43,8 @@ const TabLayout = () => {
           options={{
             title: "Location",
             headerShown: false,
-            tabBarIcon: ({ color, focused }) => (
-              <TabIcon
-                icon={icons?.logout}
-                color={color}
-                name="Location"
-                focused={focused}
-              />
+            tabBarIcon: ({ color }) => (
+              <Entypo name="location" size={24} color={color} />
             ),
           }}
         />
@@ -74,13 +53,8 @@ const TabLayout = () => {
           options={{
             title: "Work",
             headerShown: false,
-            tabBarIcon: ({ color, focused }) => (
-              <TabIcon
-                icon={icons?.logout}
-                color={color}
-                name="Work"
-                focused={focused}
-              />
+            tabBarIcon: ({ color }) => (
+              <Entypo name="suitcase" size={24} color={color} />
             ),
           }}
         />
@@ -90,12 +64,7 @@ const TabLayout = () => {
             title: "Profile",
             headerShown: false,
             tabBarIcon: ({ color, focused }) => (
-              <TabIcon
-                icon={icons?.profile}
-                color={color}
-                name="Profile"
-                focused={focused}
-              />
+              <MaterialCommunityIcons name="account" size={24} color={color} />
             ),
           }}
         />
