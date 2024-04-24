@@ -1,9 +1,19 @@
+import "react-native-url-polyfill/auto";
+import { StyleSheet } from "react-native";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
-import { Slot } from "expo-router";
+import { SplashScreen, Stack } from "expo-router";
+
+SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-  return <Slot />;
+  return (
+    <>
+      <Stack>
+        <Stack.Screen name="dashboard" options={{ headerShown: false }} />
+        <Stack.Screen name="index" options={{ headerShown: false }} />
+      </Stack>
+    </>
+  );
 }
 
 const styles = StyleSheet.create({
