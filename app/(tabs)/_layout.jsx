@@ -2,7 +2,6 @@ import { StatusBar } from "expo-status-bar";
 import { Redirect, Tabs } from "expo-router";
 import { Image, Text, View, StyleSheet } from "react-native";
 
-import { icons } from "../../constants/icons";
 import { Loader } from "../../components/Loader";
 
 import { Entypo } from "@expo/vector-icons";
