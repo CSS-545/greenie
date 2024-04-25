@@ -13,6 +13,34 @@ import {
 
 import { AntDesign } from "@expo/vector-icons";
 
+const InfoCard = ({ heading, length, subheading, buttonText, onPress }) => {
+  return (
+    <View style={styles.residentialInfo}>
+      <View style={styles.header}>
+        <Text style={styles.heading}>{`${heading} (${length})`}</Text>
+        <Text style={styles.subheading}>{subheading}</Text>
+      </View>
+
+      <View style={styles.noDataWrapper}>
+        <Image
+          style={styles.image}
+          source={require("../../assets/dashboard/noData.png")}
+          alt="No data"
+        />
+        <TouchableOpacity style={styles.addRecords} onPress={onPress}>
+          <AntDesign
+            size={14}
+            name="plus"
+            color="black"
+            style={{ marginRight: 5 }}
+          />
+          <Text>{buttonText}</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+};
+
 export default Dashboard = () => {
   return (
     <SafeAreaView style={styles.container}>
@@ -42,45 +70,18 @@ export default Dashboard = () => {
           </View>
         </View>
 
-        <View style={styles.residentialInfo}>
-          <View style={styles.header}>
-            <View>
-              <Text
-                style={styles.heading}
-              >{`Residential Information (0)`}</Text>
-              <Text style={styles.subheading}>
-                All your permanent and temporary addresses
-              </Text>
-            </View>
-
-            <View style={styles.headerLinks}>
-              <TouchableOpacity>
-                <Text style={styles.link}>See All Addresses</Text>
-              </TouchableOpacity>
-              <Button
-                title="Add Address"
-                leftIcon={<AntDesign name="edit" size={24} color="black" />}
-                style={styles.editBtn}
-              />
-            </View>
-            <TouchableOpacity style={styles.editIcon}>
-              <AntDesign name="edit" size={24} color="black" />
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.noDataWrapper}>
-            <Image
-              style={styles.noData}
-              source={require("../../assets/dashboard/noData.png")}
-              alt="No data"
-            />
-            <Button
-              title="Add Address"
-              leftIcon={<AntDesign name="plus" size={24} color="black" />}
-              style={styles.addRecords}
-            />
-          </View>
-        </View>
+        <InfoCard
+          heading="Residential Information"
+          length={0}
+          subheading="All your permanent and temporary addresses"
+          buttonText="add address"
+        />
+        <InfoCard
+          heading="Work Experience"
+          length={0}
+          subheading="All your past and present work experience"
+          buttonText="add experience"
+        />
       </ScrollView>
     </SafeAreaView>
   );
@@ -97,7 +98,7 @@ const styles = StyleSheet.create({
   bioSection: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
+    justifyContent: "center",
     paddingHorizontal: 20,
     paddingVertical: 10,
   },
@@ -160,34 +161,42 @@ const styles = StyleSheet.create({
   residentialInfo: {
     marginTop: 20,
   },
+  residentialInfo: {
+    marginTop: 20,
+    backgroundColor: "#ffffff",
+    borderRadius: 10,
+    elevation: 1.5,
+  },
   header: {
-    // Header styles
+    padding: 20,
+    paddingBottom: 0,
   },
   heading: {
-    // Heading styles
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 5,
   },
   subheading: {
-    // Subheading styles
-  },
-  headerLinks: {
-    // Header links styles
-  },
-  link: {
-    // Link styles
-  },
-  editBtn: {
-    // Edit button styles
-  },
-  editIcon: {
-    // Edit icon styles
+    fontSize: 14,
+    color: "#757575",
   },
   noDataWrapper: {
-    // No data wrapper styles
+    padding: 20,
+    alignItems: "center",
   },
   noData: {
-    // No data image styles
+    marginBottom: 20,
   },
   addRecords: {
-    // Add records button styles
+    backgroundColor: "transparent",
+    borderColor: "#4caf50",
+    borderWidth: 1,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 20,
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "row",
+    marginTop: 10,
   },
 });
