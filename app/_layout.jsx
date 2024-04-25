@@ -1,8 +1,6 @@
 import "react-native-url-polyfill/auto";
-import { SplashScreen, Stack } from "expo-router";
+import { Stack } from "expo-router";
 import GlobalProvider from "../context/GlobalProvider";
-
-SplashScreen.preventAutoHideAsync();
 
 const RootLayout = () => {
   return (
