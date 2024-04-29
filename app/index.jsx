@@ -1,10 +1,10 @@
 import React from "react";
+import { router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
-import { router } from "expo-router";
 
-const Home = () => {
+export default Home = () => {
   return (
     <SafeAreaView>
       <StatusBar backgroundColor="#8cf078" style="dark" />
@@ -29,7 +29,7 @@ const Home = () => {
             sharing of verification reports on our secure encrypted platform.
           </Text>
 
-          <TouchableOpacity onPress={() => router.replace("/dashboard")}>
+          <TouchableOpacity onPress={() => router.push("/login")}>
             <View style={styles.heroActionBtn}>
               <View style={styles.googleButton}>
                 <Image
@@ -113,5 +113,3 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
   },
 });
-
-export default Home;

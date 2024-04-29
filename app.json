@@ -26,6 +26,10 @@
       "favicon": "./assets/favicon.png",
       "bundler": "metro"
     },
-    "plugins": ["expo-router"]
+    "plugins": [
+      "expo-router",
+      "@react-native-firebase/app",
+      "@react-native-firebase/auth"
+    ]
   }
 }
