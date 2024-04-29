@@ -32,11 +32,7 @@ export default Home = () => {
           <TouchableOpacity onPress={() => router.push("/login")}>
             <View style={styles.heroActionBtn}>
               <View style={styles.googleButton}>
-                <Image
-                  source={require("../assets/home/google-icon.png")}
-                  style={styles.googleLogo}
-                />
-                <Text style={styles.tryForFree}>Sign in with Google</Text>
+                <Text style={styles.tryForFree}>Sign in</Text>
               </View>
             </View>
           </TouchableOpacity>
