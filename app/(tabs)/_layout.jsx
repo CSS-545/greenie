@@ -1,11 +1,11 @@
-import { StatusBar } from "expo-status-bar";
-import { Redirect, Tabs } from "expo-router";
-import { Image, Text, View, StyleSheet, ScrollView } from "react-native";
+import { StatusBar } from 'expo-status-bar';
+import { Redirect, Tabs } from 'expo-router';
+import { Image, Text, View, StyleSheet, ScrollView } from 'react-native';
 
-import { Loader } from "../../components/Loader";
+import { Loader } from '../../components/Loader';
 
-import { Entypo } from "@expo/vector-icons";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { Entypo } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const TabLayout = () => {
   //   const { loading, isLogged } = useGlobalContext();
@@ -18,11 +18,11 @@ const TabLayout = () => {
       <StatusBar backgroundColor="#8cf078" style="dark" />
       <Tabs
         screenOptions={{
-          tabBarActiveTintColor: "#8cf078",
-          tabBarInactiveTintColor: "#fff",
+          tabBarActiveTintColor: '#8cf078',
+          tabBarInactiveTintColor: '#fff',
           tabBarShowLabel: false,
           tabBarStyle: {
-            backgroundColor: "#000",
+            backgroundColor: '#000',
             height: 60,
           },
         }}
@@ -30,41 +30,33 @@ const TabLayout = () => {
         <Tabs.Screen
           name="dashboard"
           options={{
-            title: "Dashboard",
+            title: 'Dashboard',
             headerShown: false,
-            tabBarIcon: ({ color }) => (
-              <Entypo name="home" size={24} color={color} />
-            ),
+            tabBarIcon: ({ color }) => <Entypo name="home" size={24} color={color} />,
           }}
         />
         <Tabs.Screen
           name="location"
           options={{
-            title: "Location",
+            title: 'Location',
             headerShown: false,
-            tabBarIcon: ({ color }) => (
-              <Entypo name="location" size={24} color={color} />
-            ),
+            tabBarIcon: ({ color }) => <Entypo name="location" size={24} color={color} />,
           }}
         />
         <Tabs.Screen
           name="work"
           options={{
-            title: "Work",
+            title: 'Work',
             headerShown: false,
-            tabBarIcon: ({ color }) => (
-              <Entypo name="suitcase" size={24} color={color} />
-            ),
+            tabBarIcon: ({ color }) => <Entypo name="suitcase" size={24} color={color} />,
           }}
         />
         <Tabs.Screen
           name="profile"
           options={{
-            title: "Profile",
+            title: 'Profile',
             headerShown: false,
-            tabBarIcon: ({ color, focused }) => (
-              <MaterialCommunityIcons name="account" size={24} color={color} />
-            ),
+            tabBarIcon: ({ color, focused }) => <MaterialCommunityIcons name="account" size={24} color={color} />,
           }}
         />
       </Tabs>
@@ -76,9 +68,9 @@ export default TabLayout;
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
     gap: 2,
   },
   icon: {
@@ -87,7 +79,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 12,
-    color: "#CDCDE0",
+    color: '#CDCDE0',
   },
   boldText: {},
 });

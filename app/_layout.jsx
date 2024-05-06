@@ -1,6 +1,6 @@
-import "react-native-url-polyfill/auto";
-import { Stack } from "expo-router";
-import GlobalProvider from "../context/GlobalProvider";
+import 'react-native-url-polyfill/auto';
+import { Stack } from 'expo-router';
+import GlobalProvider from '../context/GlobalProvider';
 
 const RootLayout = () => {
   return (
