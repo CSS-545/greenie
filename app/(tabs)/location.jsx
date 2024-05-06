@@ -25,6 +25,8 @@ const Location = () => {
     endDate: "",
   });
 
+  const [showGPS, setShowGPS] = useState(false);
+
   const handleInputChange = (name, value) => {
     setFormData({
       ...formData,
@@ -32,23 +34,18 @@ const Location = () => {
     });
   };
 
-  const {
-    addressType,
-    address,
-    landmark,
-    city,
-    pincode,
-    state,
-    country,
-    startDate,
-    endDate,
-  } = formData;
+  const handleSave = () => {
+    setShowGPS(true);
+  };
+
+  const handleBack = () => {
+    setShowGPS(false);
+  };
 
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
         <Text style={styles.header}>Add Residential Information</Text>
-        <Text style={styles.label}>Enter your location *</Text>
         <View style={styles.tipContainer}>
           <Entypo name="info-with-circle" size={24} color="#000" />
           <Text style={styles.tipText}>
@@ -57,79 +54,110 @@ const Location = () => {
             will identify accuracy within 250 meters radius.
           </Text>
         </View>
-        <View style={{ ...styles.searchSection, marginBottom: 10 }}>
-          <Ionicons name="location-outline" size={24} color="black" />
-          <TextInput
-            placeholder="Search your address"
-            onChangeText={(text) => handleInputChange("address", text)}
-          />
-        </View>
-        <MapView
-          style={styles.map}
-          initialRegion={{
-            latitude: 37.78825,
-            longitude: -122.4324,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
-          }}
-        />
+        {!showGPS ? (
+          <>
+            <Text style={styles.label}>Enter your location *</Text>
+            <View style={{ ...styles.searchSection, marginBottom: 10 }}>
+              <Ionicons name="location-outline" size={24} color="black" />
+              <TextInput
+                placeholder="Search your address"
+                onChangeText={(text) => handleInputChange("address", text)}
+              />
+            </View>
+            <MapView
+              style={styles.map}
+              initialRegion={{
+                latitude: 37.78825,
+                longitude: -122.4324,
+                latitudeDelta: 0.0922,
+                longitudeDelta: 0.0421,
+              }}
+            />
 
-        <TextInput
-          style={{ ...styles.input, marginBottom: 10 }}
-          placeholder="Address"
-          onChangeText={(text) => handleInputChange("address", text)}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Landmark"
-          onChangeText={(text) => handleInputChange("landmark", text)}
-        />
-        <View style={styles.inlineInputs}>
-          <TextInput
-            style={[styles.input, { flex: 1 }]}
-            placeholder="City"
-            onChangeText={(text) => handleInputChange("city", text)}
-          />
-          <TextInput
-            style={[styles.input, { flex: 1 }]}
-            placeholder="Pincode"
-            onChangeText={(text) => handleInputChange("pincode", text)}
-          />
-        </View>
-        <View style={styles.inlineInputs}>
-          <TextInput
-            style={[styles.input, { flex: 1 }]}
-            placeholder="State"
-            onChangeText={(text) => handleInputChange("state", text)}
-          />
-          <TextInput
-            style={[styles.input, { flex: 1 }]}
-            placeholder="Country"
-            onChangeText={(text) => handleInputChange("country", text)}
-          />
-        </View>
+            <TextInput
+              style={{ ...styles.input, marginBottom: 10 }}
+              placeholder="Address"
+              onChangeText={(text) => handleInputChange("address", text)}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Landmark"
+              onChangeText={(text) => handleInputChange("landmark", text)}
+            />
+            <View style={styles.inlineInputs}>
+              <TextInput
+                style={[styles.input, { flex: 1 }]}
+                placeholder="City"
+                onChangeText={(text) => handleInputChange("city", text)}
+              />
+              <TextInput
+                style={[styles.input, { flex: 1 }]}
+                placeholder="Pincode"
+                onChangeText={(text) => handleInputChange("pincode", text)}
+              />
+            </View>
+            <View style={styles.inlineInputs}>
+              <TextInput
+                style={[styles.input, { flex: 1 }]}
+                placeholder="State"
+                onChangeText={(text) => handleInputChange("state", text)}
+              />
+              <TextInput
+                style={[styles.input, { flex: 1 }]}
+                placeholder="Country"
+                onChangeText={(text) => handleInputChange("country", text)}
+              />
+            </View>
 
-        <View style={styles.dateFields}>
-          <TextInput
-            style={[styles.input, { flex: 1 }]}
-            placeholder="Start Date"
-            onChangeText={(text) => handleInputChange("startDate", text)}
-          />
-          <TextInput
-            style={[styles.input, { flex: 1 }]}
-            placeholder="End Date"
-            onChangeText={(text) => handleInputChange("endDate", text)}
-          />
-        </View>
+            <View style={styles.dateFields}>
+              <TextInput
+                style={[styles.input, { flex: 1 }]}
+                placeholder="Start Date"
+                onChangeText={(text) => handleInputChange("startDate", text)}
+              />
+              <TextInput
+                style={[styles.input, { flex: 1 }]}
+                placeholder="End Date"
+                onChangeText={(text) => handleInputChange("endDate", text)}
+              />
+            </View>
 
-        <View style={styles.buttonsContainer}>
-          <TouchableOpacity style={styles.cancelButton}>
-            <Text style={styles.buttonText}>Cancel</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.saveButton}>
-            <Text style={styles.buttonText}>Save</Text>
-          </TouchableOpacity>
-        </View>
+            <View style={styles.buttonsContainer}>
+              <TouchableOpacity style={styles.cancelButton}>
+                <Text style={styles.buttonText}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.saveButton}
+                onPress={() => handleSave()}
+              >
+                <Text style={styles.buttonText}>Save</Text>
+              </TouchableOpacity>
+            </View>
+          </>
+        ) : (
+          <>
+            <View style={styles.cardContainer}>
+              <View style={styles.cardHeader}>
+                <Ionicons name="location" size={24} color="#000" />
+                <Text style={styles.cardHeaderText}>GPS is Off</Text>
+              </View>
+              <Text style={styles.cardMessage}>
+                Please turn on your GPS to proceed.
+              </Text>
+              <View style={styles.cardButtons}>
+                <TouchableOpacity
+                  style={styles.backButton}
+                  onPress={handleBack}
+                >
+                  <Text style={styles.cardButtonText}>Back</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.cardButton}>
+                  <Text style={styles.cardButtonText}>Turn On GPS</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </>
+        )}
       </ScrollView>
     </SafeAreaView>
   );
@@ -230,6 +258,50 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 16,
     fontWeight: "bold",
+  },
+  cardContainer: {
+    backgroundColor: "#f4f4f4",
+    padding: 20,
+    borderRadius: 10,
+    alignItems: "center",
+    marginTop: 20,
+  },
+  cardHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  cardHeaderText: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginLeft: 10,
+  },
+  cardMessage: {
+    fontSize: 16,
+    marginBottom: 20,
+    textAlign: "center",
+  },
+  cardButtons: {
+    flexDirection: "row",
+    justifyContent: "center",
+  },
+  cardButton: {
+    backgroundColor: "#8cf078",
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+  },
+  cardButtonText: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  backButton: {
+    backgroundColor: "#000",
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    marginRight: 10,
   },
 });
 
