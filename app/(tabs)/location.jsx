@@ -44,9 +44,11 @@ const Location = () => {
   };
 
   const handleSearch = (address) => {
+    setSelectedAddress(address);
     getSuggestion(address).then((data) => {
       const newOptions = data.predictions.map((p) => p.structured_formatting.main_text);
       setSearchData(newOptions);
+      console.log(newOptions);
     });
   };
 
@@ -243,7 +245,7 @@ const styles = StyleSheet.create({
     position: 'relative',
     maxHeight: 160,
     overflow: 'scroll',
-    elevation: .5,
+    elevation: 0.5,
   },
   addressItem: {
     paddingVertical: 10,
