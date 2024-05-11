@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 import MapView from 'react-native-maps';
+import { getSuggestion, getCoordinatesFromAddress } from '../../lib/maps';
 
 const Location = () => {
   const [formData, setFormData] = useState({
@@ -20,6 +21,8 @@ const Location = () => {
 
   const [showGPS, setShowGPS] = useState(false);
 
+  const [seachText, setSeachText] = useState("");
+
   const handleInputChange = (name, value) => {
     setFormData({
       ...formData,
@@ -28,12 +31,27 @@ const Location = () => {
   };
 
   const handleSave = () => {
-    setShowGPS(true);
+    // setShowGPS(true);
+    getCoordinatesFromAddress(formData.address).then((data) => {
+      console.log(JSON.stringify(data));
+    });
   };
 
   const handleBack = () => {
     setShowGPS(false);
   };
+
+  const handleSearch = (address) => {
+    console.log(address);
+    getSuggestion(address).then((data) => {
+      console.log(data);
+    });
+  };
+
+  const captureGps = (coordinates) => {
+    console.log(coordinates);
+  };
+
 
   return (
     <SafeAreaView style={styles.container}>
@@ -53,7 +71,7 @@ const Location = () => {
               <Ionicons name="location-outline" size={24} color="black" />
               <TextInput
                 placeholder="Search your address"
-                onChangeText={(text) => handleInputChange('address', text)}
+                onChangeText={(text) => handleSearch(text)}
               />
             </View>
             <MapView
