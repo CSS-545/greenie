@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+
 import { Ionicons } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
-import MapView from 'react-native-maps';
+
 import { getSuggestion, getCoordinatesFromAddress } from '../../lib/maps';
+import MapView from 'react-native-maps';
 
 const Location = () => {
-  const [formData, setFormData] = useState({
-    addressType: '',
+  const [locationData, setLocationData] = useState({
     address: '',
     landmark: '',
     city: '',
@@ -20,19 +21,20 @@ const Location = () => {
   });
 
   const [showGPS, setShowGPS] = useState(false);
-
-  const [seachText, setSeachText] = useState("");
+  const [searchData, setSearchData] = useState([]);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [selectedAddress, setSelectedAddress] = useState('');
 
   const handleInputChange = (name, value) => {
-    setFormData({
-      ...formData,
+    setLocationData({
+      ...locationData,
       [name]: value,
     });
   };
 
   const handleSave = () => {
     // setShowGPS(true);
-    getCoordinatesFromAddress(formData.address).then((data) => {
+    getCoordinatesFromAddress(locationData.address).then((data) => {
       console.log(JSON.stringify(data));
     });
   };
@@ -42,16 +44,20 @@ const Location = () => {
   };
 
   const handleSearch = (address) => {
-    console.log(address);
     getSuggestion(address).then((data) => {
-      console.log(data);
+      const newOptions = data.predictions.map((p) => p.structured_formatting.main_text);
+      setSearchData(newOptions);
     });
+  };
+
+  const handleSelectAddress = (address) => {
+    setSelectedAddress(address);
+    setShowDropdown(false);
   };
 
   const captureGps = (coordinates) => {
     console.log(coordinates);
   };
-
 
   return (
     <SafeAreaView style={styles.container}>
@@ -70,10 +76,22 @@ const Location = () => {
             <View style={{ ...styles.searchSection, marginBottom: 10 }}>
               <Ionicons name="location-outline" size={24} color="black" />
               <TextInput
+                value={selectedAddress}
                 placeholder="Search your address"
+                onFocus={() => setShowDropdown(true)}
                 onChangeText={(text) => handleSearch(text)}
               />
             </View>
+            {showDropdown && (
+              <View style={styles.dropdown}>
+                {searchData.map((item, index) => (
+                  <TouchableOpacity key={index} onPress={() => handleSelectAddress(item)}>
+                    <Text style={styles.addressItem}>{item}</Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            )}
+
             <MapView
               style={styles.map}
               initialRegion={{
@@ -222,10 +240,16 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   dropdown: {
-    marginTop: 20,
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 5,
+    position: 'relative',
+    maxHeight: 160,
+    overflow: 'scroll',
+    elevation: .5,
+  },
+  addressItem: {
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
   },
   inlineInputs: {
     flexDirection: 'row',
