@@ -5,8 +5,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 
-import { getSuggestion, getCoordinatesFromAddress } from '../../lib/maps';
-import MapView from 'react-native-maps';
+import { getSuggestion, getCoordinatesFromAddress, getCoordinatesFromPlaceID } from '../../lib/maps';
+import MapView, { Marker } from 'react-native-maps';
 
 const Location = () => {
   const [locationData, setLocationData] = useState({
@@ -18,6 +18,15 @@ const Location = () => {
     country: '',
     startDate: '',
     endDate: '',
+  });
+
+  const [expectedLatlong, setExpectedLatLong] = useState({
+    latitude: 37.78825,
+    longitude: -122.4324,
+  });
+  const [actualLatlong, setActualLatLong] = useState({
+    latitude: 0,
+    longitude: 0,
   });
 
   const [showGPS, setShowGPS] = useState(false);
@@ -33,9 +42,16 @@ const Location = () => {
   };
 
   const handleSave = () => {
-    // setShowGPS(true);
-    getCoordinatesFromAddress(locationData.address).then((data) => {
-      console.log(JSON.stringify(data));
+    const formattedAddress = `${locationData.address}, ${locationData.landmark}, ${locationData.city}, ${locationData.state}, ${locationData.country}, ${locationData.pincode}`;
+
+    getCoordinatesFromAddress(formattedAddress).then((res) => {
+      const data = JSON.stringify(res);
+      setActualLatLong({
+        latitude: data.results[0].geometry.location.lat,
+        longitude: data.results[0].geometry.location.lng,
+      });
+
+      setShowGPS(true);
     });
   };
 
@@ -44,15 +60,40 @@ const Location = () => {
   };
 
   const handleSearch = (address) => {
+    setShowDropdown(true);
     setSelectedAddress(address);
     getSuggestion(address).then((data) => {
-      const newOptions = data.predictions.map((p) => p.structured_formatting.main_text);
-      setSearchData(newOptions);
-      console.log(newOptions);
+      setSearchData(data.predictions);
     });
   };
 
+  const findPlaceId = (searchString) => {
+    for (const item of searchData) {
+      if (item.structured_formatting.main_text === searchString) {
+        const [address, landmark, city, state, country] = item.description.split(',').map((item) => item.trim());
+        setLocationData((prevData) => ({
+          ...prevData,
+          address: address,
+          landmark: landmark,
+          city: city,
+          state: state,
+          country: country,
+        }));
+
+        return item.place_id;
+      }
+    }
+  };
+
   const handleSelectAddress = (address) => {
+    const placeID = findPlaceId(address);
+    getCoordinatesFromPlaceID(placeID).then((data) => {
+      setExpectedLatLong({
+        latitude: data.results[0].geometry.location.lat,
+        longitude: data.results[0].geometry.location.lng,
+      });
+    });
+
     setSelectedAddress(address);
     setShowDropdown(false);
   };
@@ -87,8 +128,11 @@ const Location = () => {
             {showDropdown && (
               <View style={styles.dropdown}>
                 {searchData.map((item, index) => (
-                  <TouchableOpacity key={index} onPress={() => handleSelectAddress(item)}>
-                    <Text style={styles.addressItem}>{item}</Text>
+                  <TouchableOpacity
+                    key={index}
+                    onPress={() => handleSelectAddress(item.structured_formatting.main_text)}
+                  >
+                    <Text style={styles.addressItem}>{item.structured_formatting.main_text}</Text>
                   </TouchableOpacity>
                 ))}
               </View>
@@ -97,57 +141,73 @@ const Location = () => {
             <MapView
               style={styles.map}
               initialRegion={{
-                latitude: 37.78825,
-                longitude: -122.4324,
                 latitudeDelta: 0.0922,
                 longitudeDelta: 0.0421,
+                latitude: expectedLatlong.latitude,
+                longitude: expectedLatlong.longitude,
               }}
-            />
+              region={{
+                latitudeDelta: 0.0922,
+                longitudeDelta: 0.0421,
+                latitude: expectedLatlong.latitude,
+                longitude: expectedLatlong.longitude,
+              }}
+            >
+              <Marker coordinate={expectedLatlong} />
+            </MapView>
 
             <TextInput
+              placeholder="Address Line 1"
+              value={locationData.address}
               style={{ ...styles.input, marginBottom: 10 }}
-              placeholder="Address"
               onChangeText={(text) => handleInputChange('address', text)}
             />
             <TextInput
               style={styles.input}
               placeholder="Landmark"
+              value={locationData.landmark}
               onChangeText={(text) => handleInputChange('landmark', text)}
             />
             <View style={styles.inlineInputs}>
               <TextInput
-                style={[styles.input, { flex: 1 }]}
                 placeholder="City"
+                value={locationData.city}
+                style={[styles.input, { flex: 1 }]}
                 onChangeText={(text) => handleInputChange('city', text)}
               />
               <TextInput
-                style={[styles.input, { flex: 1 }]}
                 placeholder="Pincode"
+                value={locationData.pincode}
+                style={[styles.input, { flex: 1 }]}
                 onChangeText={(text) => handleInputChange('pincode', text)}
               />
             </View>
             <View style={styles.inlineInputs}>
               <TextInput
-                style={[styles.input, { flex: 1 }]}
                 placeholder="State"
+                value={locationData.state}
+                style={[styles.input, { flex: 1 }]}
                 onChangeText={(text) => handleInputChange('state', text)}
               />
               <TextInput
-                style={[styles.input, { flex: 1 }]}
                 placeholder="Country"
+                value={locationData.country}
+                style={[styles.input, { flex: 1 }]}
                 onChangeText={(text) => handleInputChange('country', text)}
               />
             </View>
 
             <View style={styles.dateFields}>
               <TextInput
-                style={[styles.input, { flex: 1 }]}
                 placeholder="Start Date"
+                value={locationData.startDate}
+                style={[styles.input, { flex: 1 }]}
                 onChangeText={(text) => handleInputChange('startDate', text)}
               />
               <TextInput
-                style={[styles.input, { flex: 1 }]}
                 placeholder="End Date"
+                value={locationData.endDate}
+                style={[styles.input, { flex: 1 }]}
                 onChangeText={(text) => handleInputChange('endDate', text)}
               />
             </View>
@@ -243,6 +303,8 @@ const styles = StyleSheet.create({
   },
   dropdown: {
     position: 'relative',
+    borderWidth: 1,
+    borderColor: '#ddd',
     maxHeight: 160,
     overflow: 'scroll',
     elevation: 0.5,
