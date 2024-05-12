@@ -1,14 +1,16 @@
-import React, { useState } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, ScrollView } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { router } from 'expo-router';
 
 import { Ionicons } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 
 import { getSuggestion, getCoordinatesFromAddress, getCoordinatesFromPlaceID } from '../../lib/maps';
 import MapView, { Marker } from 'react-native-maps';
+import * as Location from 'expo-location';
 
-const Location = () => {
+const LocationScreen = () => {
   const [locationData, setLocationData] = useState({
     address: '',
     landmark: '',
@@ -34,6 +36,19 @@ const Location = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedAddress, setSelectedAddress] = useState('');
 
+  useEffect(() => {
+    setLocationData({
+      address: '',
+      landmark: '',
+      city: '',
+      pincode: '',
+      state: '',
+      country: '',
+      startDate: '',
+      endDate: '',
+    });
+  }, []);
+
   const handleInputChange = (name, value) => {
     setLocationData({
       ...locationData,
@@ -44,15 +59,24 @@ const Location = () => {
   const handleSave = () => {
     const formattedAddress = `${locationData.address}, ${locationData.landmark}, ${locationData.city}, ${locationData.state}, ${locationData.country}, ${locationData.pincode}`;
 
-    getCoordinatesFromAddress(formattedAddress).then((res) => {
-      const data = JSON.stringify(res);
-      setActualLatLong({
-        latitude: data.results[0].geometry.location.lat,
-        longitude: data.results[0].geometry.location.lng,
-      });
+    getCoordinatesFromAddress(formattedAddress)
+      .then((res) => {
+        if (res && res.results && res.results.length > 0 && res.results[0].geometry) {
+          const { geometry } = res.results[0];
 
-      setShowGPS(true);
-    });
+          setExpectedLatLong({
+            latitude: geometry.location.lat ?? 0,
+            longitude: geometry.location.lng ?? 0,
+          });
+
+          setShowGPS(true);
+        } else {
+          console.error('Invalid response format:', res);
+        }
+      })
+      .catch((error) => {
+        console.error('Error fetching coordinates:', error);
+      });
   };
 
   const handleBack = () => {
@@ -98,8 +122,26 @@ const Location = () => {
     setShowDropdown(false);
   };
 
-  const captureGps = (coordinates) => {
-    console.log(coordinates);
+  const captureLocation = async () => {
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== 'granted') {
+      Alert.alert('Permission to access location was denied');
+      return;
+    }
+
+    try {
+      let location = await Location.getCurrentPositionAsync({});
+      setActualLatLong({
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+      });
+    } catch (error) {
+      Alert.alert('Error fetching location: ' + error.message);
+    } finally {
+      Alert.alert('Location captured successfully');
+      router.push('/dashboard');
+      setShowGPS(false);
+    }
   };
 
   return (
@@ -233,8 +275,8 @@ const Location = () => {
                 <TouchableOpacity style={styles.backButton} onPress={handleBack}>
                   <Text style={styles.cardButtonText}>Back</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.cardButton}>
-                  <Text style={styles.cardButtonText}>Turn On GPS</Text>
+                <TouchableOpacity style={styles.cardButton} onPress={captureLocation}>
+                  <Text style={styles.cardButtonText}>Capture Location</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -395,4 +437,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Location;
+export default LocationScreen;

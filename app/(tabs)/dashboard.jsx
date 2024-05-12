@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Text, StyleSheet, View, Image, TouchableOpacity, ScrollView } from 'react-native';
 
 import { AntDesign } from '@expo/vector-icons';
+import { router } from 'expo-router';
 
 const InfoCard = ({ heading, length, subheading, buttonText, onPress }) => {
   return (
@@ -55,12 +56,18 @@ export default Dashboard = () => {
           length={0}
           subheading="All your permanent and temporary addresses"
           buttonText="add address"
+          onPress={() => {
+            router.push('/location');
+          }}
         />
         <InfoCard
           heading="Work Experience"
           length={0}
           subheading="All your past and present work experience"
           buttonText="add experience"
+          onPress={() => {
+            router.push('/work');
+          }}
         />
       </ScrollView>
     </SafeAreaView>
