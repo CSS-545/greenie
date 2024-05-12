@@ -8,7 +8,6 @@ import { auth } from '../../lib/firebase';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 
 const Login = () => {
-  const { setUser, setIsLogged } = useGlobalContext();
   const [isSubmitting, setSubmitting] = useState(false);
   const [form, setForm] = useState({
     email: '',

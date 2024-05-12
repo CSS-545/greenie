@@ -2,14 +2,11 @@ import React, { useState } from 'react';
 import { View, Text, ScrollView, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useGlobalContext } from '../../context/GlobalProvider';
 
 import { auth } from '../../lib/firebase';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 
 const SignUp = () => {
-  const { setUser, setIsLogged } = useGlobalContext();
-
   const [isSubmitting, setSubmitting] = useState(false);
   const [form, setForm] = useState({
     name: '',
