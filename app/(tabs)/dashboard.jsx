@@ -6,7 +6,7 @@ import { Text, StyleSheet, View, Image, TouchableOpacity, ScrollView } from 'rea
 import { AntDesign } from '@expo/vector-icons';
 import { router } from 'expo-router';
 
-const InfoCard = ({ heading, length, subheading, buttonText, onPress }) => {
+const CardTemplate = ({ heading, length, subheading, buttonText, onPress }) => {
   return (
     <View style={styles.residentialInfo}>
       <View style={styles.header}>
@@ -51,7 +51,7 @@ export default Dashboard = () => {
           </View>
         </View>
 
-        <InfoCard
+        <CardTemplate
           heading="Residential Information"
           length={0}
           subheading="All your permanent and temporary addresses"
@@ -60,7 +60,7 @@ export default Dashboard = () => {
             router.push('/location');
           }}
         />
-        <InfoCard
+        <CardTemplate
           heading="Work Experience"
           length={0}
           subheading="All your past and present work experience"

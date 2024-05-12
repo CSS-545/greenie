@@ -1,16 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import { useGlobalContext } from '../../context/GlobalProvider';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 
 import { Ionicons } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 
-import { getSuggestion, getCoordinatesFromAddress, getCoordinatesFromPlaceID } from '../../lib/maps';
+import { getSuggestion, getCoordinatesFromAddress, getCoordinatesFromPlaceID, withinDistance } from '../../lib/maps';
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 
 const LocationScreen = () => {
+  const { setIsLocationVerified } = useGlobalContext();
+
   const [locationData, setLocationData] = useState({
     address: '',
     landmark: '',
@@ -138,6 +141,11 @@ const LocationScreen = () => {
     } catch (error) {
       Alert.alert('Error fetching location: ' + error.message);
     } finally {
+      // console.log('Actual Latlong:', actualLatlong);
+      // console.log('Expected Latlong:', expectedLatlong);
+      const isWithinDistance = withinDistance(expectedLatlong, actualLatlong);
+      // console.log(isWithinDistance);
+      setIsLocationVerified(isWithinDistance);
       Alert.alert('Location captured successfully');
       router.push('/dashboard');
       setShowGPS(false);
