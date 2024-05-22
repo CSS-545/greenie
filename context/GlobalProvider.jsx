@@ -8,6 +8,16 @@ export const useGlobalContext = () => useContext(GlobalContext);
 
 const GlobalProvider = ({ children }) => {
   const [isLocationVerified, setIsLocationVerified] = useState(false);
+  const [locationData, setLocationData] = useState({
+    address: '',
+    landmark: '',
+    city: '',
+    pincode: '',
+    state: '',
+    country: '',
+    startDate: '',
+    endDate: '',
+  });
 
   const handleLogout = async () => {
     await auth
@@ -21,26 +31,28 @@ const GlobalProvider = ({ children }) => {
   };
 
   // State Management
-  useEffect(() => {
-    const handleAppStateChange = (nextAppState) => {
-      if (nextAppState === 'inactive' || nextAppState === 'paused') {
-        console.log('Logging out user...');
-        handleLogout();
-      }
-    };
+  // useEffect(() => {
+  //   const handleAppStateChange = (nextAppState) => {
+  //     if (nextAppState === 'inactive' || nextAppState === 'paused') {
+  //       console.log('Logging out user...');
+  //       handleLogout();
+  //     }
+  //   };
 
-    AppState.addEventListener('change', handleAppStateChange);
+  //   AppState.addEventListener('change', handleAppStateChange);
 
-    return () => {
-      AppState.removeEventListener('change', handleAppStateChange);
-    };
-  }, []);
+  //   return () => {
+  //     AppState.removeEventListener('change', handleAppStateChange);
+  //   };
+  // }, []);
 
   return (
     <GlobalContext.Provider
       value={{
         isLocationVerified,
         setIsLocationVerified,
+        locationData,
+        setLocationData,
       }}
     >
       {children}

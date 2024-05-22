@@ -1,12 +1,15 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Text, StyleSheet, View, Image, TouchableOpacity, ScrollView } from 'react-native';
 
 import { AntDesign } from '@expo/vector-icons';
+import { Entypo } from '@expo/vector-icons';
 import { router } from 'expo-router';
+import { useGlobalContext } from '../../context/GlobalProvider';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const CardTemplate = ({ heading, length, subheading, buttonText, onPress }) => {
+const CardTemplate = ({ heading, length, subheading, buttonText, onPress, isVerified, locationData }) => {
   return (
     <View style={styles.residentialInfo}>
       <View style={styles.header}>
@@ -14,18 +17,54 @@ const CardTemplate = ({ heading, length, subheading, buttonText, onPress }) => {
         <Text style={styles.subheading}>{subheading}</Text>
       </View>
 
-      <View style={styles.noDataWrapper}>
-        <Image style={styles.image} source={require('../../assets/dashboard/noData.png')} alt="No data" />
-        <TouchableOpacity style={styles.addRecords} onPress={onPress}>
-          <AntDesign size={14} name="plus" color="black" style={{ marginRight: 5 }} />
-          <Text>{buttonText}</Text>
-        </TouchableOpacity>
-      </View>
+      {!isVerified ? (
+        <View style={styles.noDataWrapper}>
+          <Image style={styles.image} source={require('../../assets/dashboard/noData.png')} alt="No data" />
+          <TouchableOpacity style={styles.addRecords} onPress={onPress}>
+            <AntDesign size={14} name="plus" color="black" style={{ marginRight: 5 }} />
+            <Text>{buttonText}</Text>
+          </TouchableOpacity>
+        </View>
+      ) : (
+        <View style={styles.verifiedCard}>
+          <View style={styles.addressRow}>
+            <View style={styles.locationIcon}>
+              <Entypo name="location-pin" size={24} />
+            </View>
+            <Text style={styles.addressText}>
+              {`${locationData.address}, ${locationData.landmark}, ${locationData.city}, ${locationData.state}, ${locationData.country}, ${locationData.pincode}`}
+            </Text>
+          </View>
+          <View style={styles.verifiedChipWrapper}>
+            <Text style={styles.verifiedChip}>Verified</Text>
+          </View>
+          <View style={styles.dateContainer}>
+            <Text style={styles.sinceText}>Since</Text>
+            <Text style={styles.dateRange}>{`${locationData.startDate} - ${locationData.endDate}`}</Text>
+          </View>
+        </View>
+      )}
     </View>
   );
 };
 
 export default Dashboard = () => {
+  const { isLocationVerified, locationData, setLocationData } = useGlobalContext();
+
+  const fetchDataFromStorage = async () => {
+    const data = await AsyncStorage.getItem('locationData');
+    console.log('data before', data);
+    if (data) {
+      const parsedLocationData = JSON.parse(data);
+      console.log('data after', parsedLocationData);
+      setLocationData(parsedLocationData);
+    }
+  };
+
+  useEffect(() => {
+    fetchDataFromStorage();
+  }, []);
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar backgroundColor="#8cf078" style="dark" />
@@ -59,6 +98,8 @@ export default Dashboard = () => {
           onPress={() => {
             router.push('/location');
           }}
+          isVerified={isLocationVerified}
+          locationData={locationData}
         />
         <CardTemplate
           heading="Work Experience"
@@ -185,5 +226,61 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     flexDirection: 'row',
     marginTop: 10,
+  },
+  verifiedCard: {
+    padding: 10,
+    margin: 20,
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 2,
+  },
+  addressRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  locationIcon: {
+    marginRight: 8,
+    color: '#000',
+    borderRadius: 50,
+    width: 40,
+    height: 40,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderColor: '#000',
+    borderWidth: 0.5,
+  },
+  addressText: {
+    fontSize: 16,
+    color: '#000',
+    flex: 1,
+    flexWrap: 'wrap',
+  },
+  verifiedChipWrapper: {
+    alignItems: 'center',
+    marginVertical: 5,
+  },
+  verifiedChip: {
+    backgroundColor: '#8cf078',
+    color: '#fff',
+    paddingHorizontal: 10,
+    paddingVertical: 2,
+    borderRadius: 12,
+    fontSize: 12,
+  },
+  dateContainer: {
+    marginTop: 5,
+  },
+  sinceText: {
+    fontSize: 14,
+    color: '#666',
+  },
+  dateRange: {
+    fontSize: 14,
+    color: '#666',
   },
 });

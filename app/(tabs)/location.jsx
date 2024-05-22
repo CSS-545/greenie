@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useGlobalContext } from '../../context/GlobalProvider';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
@@ -12,18 +13,7 @@ import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 
 const LocationScreen = () => {
-  const { setIsLocationVerified } = useGlobalContext();
-
-  const [locationData, setLocationData] = useState({
-    address: '',
-    landmark: '',
-    city: '',
-    pincode: '',
-    state: '',
-    country: '',
-    startDate: '',
-    endDate: '',
-  });
+  const { setIsLocationVerified, locationData, setLocationData } = useGlobalContext();
 
   const [expectedLatlong, setExpectedLatLong] = useState({
     latitude: 37.78825,
@@ -125,6 +115,10 @@ const LocationScreen = () => {
     setShowDropdown(false);
   };
 
+  const saveDataToStorage = async () => {
+    await AsyncStorage.setItem('locationData', JSON.stringify(locationData));
+  };
+
   const captureLocation = async () => {
     let { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== 'granted') {
@@ -141,11 +135,14 @@ const LocationScreen = () => {
     } catch (error) {
       Alert.alert('Error fetching location: ' + error.message);
     } finally {
-      // console.log('Actual Latlong:', actualLatlong);
-      // console.log('Expected Latlong:', expectedLatlong);
+      console.log('Actual Latlong:', actualLatlong);
+      console.log('Expected Latlong:', expectedLatlong);
+
       const isWithinDistance = withinDistance(expectedLatlong, actualLatlong);
-      // console.log(isWithinDistance);
+      console.log(isWithinDistance);
       setIsLocationVerified(isWithinDistance);
+
+      saveDataToStorage();
       Alert.alert('Location captured successfully');
       router.push('/dashboard');
       setShowGPS(false);

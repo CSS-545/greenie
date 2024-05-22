@@ -1,20 +1,13 @@
 import { StatusBar } from 'expo-status-bar';
-import { Redirect, Tabs } from 'expo-router';
-import { Image, Text, View, StyleSheet, ScrollView } from 'react-native';
-
-import { Loader } from '../../components/Loader';
+import { Tabs } from 'expo-router';
+import { StyleSheet } from 'react-native';
 
 import { Entypo } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const TabLayout = () => {
-  //   const { loading, isLogged } = useGlobalContext();
-
-  //   if (!loading && !isLogged) return <Redirect href="/sign-in" />;
-
   return (
     <>
-      {/* <Loader isLoading={loading} /> */}
       <StatusBar backgroundColor="#8cf078" style="dark" />
       <Tabs
         screenOptions={{
